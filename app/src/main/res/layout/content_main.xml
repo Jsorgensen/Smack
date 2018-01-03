@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="jsorgensen.com.smack.MainActivity"
+    tools:context="jsorgensen.com.smack.Controller.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <TextView

@@ -5,4 +5,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="message">message:</string>
+    <string name="please_log_in">Please Log In</string>
+    <string name="send_button">Send Button</string>
 </resources>

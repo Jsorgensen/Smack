@@ -8,8 +8,10 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(){
 
@@ -22,6 +24,8 @@ class MainActivity : AppCompatActivity(){
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+
+        content_main.requestFocus()
     }
 
     override fun onBackPressed() {
@@ -30,5 +34,17 @@ class MainActivity : AppCompatActivity(){
         } else {
             super.onBackPressed()
         }
+    }
+
+    fun onLoginButtonNavHeaderClick(view: View){
+
+    }
+
+    fun onAddChannelButtonNavHeaderClick(view: View){
+
+    }
+
+    fun onSendMessageButtonClick(view: View){
+
     }
 }

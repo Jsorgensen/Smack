@@ -8,4 +8,6 @@
     <string name="message">message:</string>
     <string name="please_log_in">Please Log In</string>
     <string name="send_button">Send Button</string>
+    <string name="login">LogIn</string>
+    <string name="add_channel_button">Add Channel Button</string>
 </resources>

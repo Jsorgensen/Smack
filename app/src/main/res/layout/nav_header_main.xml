@@ -51,11 +51,12 @@
         android:layout_marginStart="8dp"
         android:background="@android:color/transparent"
         android:onClick="onLoginButtonNavHeaderClick"
-        android:paddingLeft="16dp"
-        android:text="LogIn"
+        android:paddingStart="16dp"
+        android:text="@string/login"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="RtlSymmetry" />
 
     <ImageView
         android:id="@+id/addChannelButtonNavHeader"
@@ -69,6 +70,7 @@
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/addchannelbutton" />
+        app:srcCompat="@drawable/addchannelbutton"
+        android:contentDescription="@string/add_channel_button" />
 
 </android.support.constraint.ConstraintLayout>

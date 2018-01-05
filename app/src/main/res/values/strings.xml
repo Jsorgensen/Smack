@@ -10,4 +10,7 @@
     <string name="send_button">Send Button</string>
     <string name="login">LogIn</string>
     <string name="add_channel_button">Add Channel Button</string>
+    <string name="avatar_icon_for_user">Avatar icon for user</string>
+    <string name="email">Email</string>
+    <string name="user_name">User Name</string>
 </resources>

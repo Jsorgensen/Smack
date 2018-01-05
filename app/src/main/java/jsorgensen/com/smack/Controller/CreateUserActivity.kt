@@ -13,6 +13,7 @@ import jsorgensen.com.smack.Services.AuthService
 import jsorgensen.com.smack.Services.UserDataService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import kotlinx.android.synthetic.main.activity_log_in.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 import java.util.*
 
 class CreateUserActivity : AppCompatActivity() {
@@ -80,14 +81,20 @@ class CreateUserActivity : AppCompatActivity() {
 
                                 enableSpinner(false)
                                 finish()
-                            }else
+                            }else{
                                 errorToast("Failed to Create User")
+                                enableSpinner(false)
+                            }
                         }
-                    }else
+                    }else{
                         errorToast("Failed to Login")
+                        enableSpinner(false)
+                    }
                 }
-            }else
+            }else{
                 errorToast("Failed to Register")
+                enableSpinner(false)
+            }
         }
     }
 

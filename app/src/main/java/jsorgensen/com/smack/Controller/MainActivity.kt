@@ -19,6 +19,7 @@ import android.widget.Toast
 import io.socket.client.IO
 import io.socket.emitter.Emitter
 import jsorgensen.com.smack.Model.Channel
+import jsorgensen.com.smack.Model.Message
 import jsorgensen.com.smack.R
 import jsorgensen.com.smack.Services.AuthService
 import jsorgensen.com.smack.Services.MessageService
@@ -33,10 +34,12 @@ class MainActivity : AppCompatActivity(){
     val socket = IO.socket(SOCKET_URL)
     lateinit var channelAdapter: ArrayAdapter<Channel>
     var selectedChannel: Channel? = null
+    lateinit var messageAdapter: ArrayAdapter<Message>
 
     private fun setUpAdapters(){
         channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
         channelListView.adapter = channelAdapter
+        messageAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.messages)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +48,7 @@ class MainActivity : AppCompatActivity(){
         setSupportActionBar(toolbar)
         socket.connect()
         socket.on("channelCreated", onNewChannel)
+        socket.on("messageCreated", onNewMessage)
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -160,13 +164,39 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-    fun onSendMessageButtonClick(view: View){
-        hideKeyboard()
+    private val onNewMessage = Emitter.Listener { args ->
+        runOnUiThread{
+            val messageBody = args[0] as String
+            val channelId = args[2] as String
+            val userName = args[3] as String
+            val userAvatar = args[4] as String
+            val userAvatarColor = args[5] as String
+            val id = args[6] as String
+            val timeStamp = args[7] as String
 
+            val newMessage = Message(messageBody, userName, channelId, userAvatar, userAvatarColor, id, timeStamp)
+            MessageService.messages.add(newMessage)
+            lkj
+        }
+    }
+
+    fun onSendMessageButtonClick(view: View){
         if(!App.sharedPreferences.isLoggedIn){
             Toast.makeText(this, "Please login to send message.", Toast.LENGTH_SHORT).show()
             return
         }
+
+        hideKeyboard()
+
+        if(messageEditText.text.isEmpty()){
+            Toast.makeText(this, "Please type a message.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val userId = UserDataService.id
+        val channelId = selectedChannel?.id
+        socket.emit("newMessage", messageEditText.text.toString(), userId, channelId,
+                UserDataService.name, UserDataService.avatarName, UserDataService.avatarColor)
 
         messageEditText.text.clear()
     }

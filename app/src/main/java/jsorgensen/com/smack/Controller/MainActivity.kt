@@ -1,18 +1,19 @@
 package jsorgensen.com.smack.Controller
 
 import BROADCAST_USER_DATA_CHANGE
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import jsorgensen.com.smack.R
 import jsorgensen.com.smack.Services.AuthService
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        hideKeyboard()
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -74,10 +77,36 @@ class MainActivity : AppCompatActivity(){
     }
 
     fun onAddChannelButtonNavHeaderClick(view: View){
+        if(!AuthService.isLoggedIn){
+            Toast.makeText(this, "You must login to add a channel.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
+        val builder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.add_channel_dialog, null)
+
+        builder.setView(dialogView)
+                .setPositiveButton("ADD"){ dialogInterface, i ->
+                    val nameEditText = dialogView.findViewById<EditText>(R.id.addChannelNameEditText)
+                    val descriptionEditText = dialogView.findViewById<EditText>(R.id.addChannelDescriptionEditText)
+                    val channelName = nameEditText.text.toString()
+                    val channelDescription = descriptionEditText.text.toString()
+
+                    hideKeyboard()
+                }.setNegativeButton("CANCEL") { dialogInterface, i ->
+                    hideKeyboard()
+                }.show()
     }
 
     fun onSendMessageButtonClick(view: View){
 
+    }
+
+    fun hideKeyboard(){
+        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        if(inputManager.isAcceptingText){
+            inputManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+        }
     }
 }

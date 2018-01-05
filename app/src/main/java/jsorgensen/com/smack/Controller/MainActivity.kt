@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import io.socket.client.IO
@@ -29,6 +30,12 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 class MainActivity : AppCompatActivity(){
 
     val socket = IO.socket(SOCKET_URL)
+    lateinit var channelAdapter: ArrayAdapter<Channel>
+
+    private fun setUpAdapters(){
+        channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
+        channelListView.adapter = channelAdapter
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +48,12 @@ class MainActivity : AppCompatActivity(){
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+
+        setUpAdapters()
+
+        if(App.sharedPreferences.isLoggedIn){
+            AuthService.findUserByEmail(this){}
+        }
     }
 
     override fun onResume() {
@@ -55,14 +68,20 @@ class MainActivity : AppCompatActivity(){
     }
 
     private val userDataChangeReceiver = object : BroadcastReceiver(){
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if(AuthService.isLoggedIn){
+        override fun onReceive(context: Context, intent: Intent?) {
+            if(App.sharedPreferences.isLoggedIn){
                 userNameNavHeader.text = UserDataService.name
                 userEmailNavHeader.text = UserDataService.email
                 val resourceId = resources.getIdentifier(UserDataService.avatarName, "drawable", packageName)
                 userImageNavHeader.setImageResource(resourceId)
                 userImageNavHeader.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
                 userLoginButtonNavHeader.text = "Logout"
+
+                MessageService.getChannels(context){complete ->
+                    if(complete){
+                        channelAdapter.notifyDataSetChanged()
+                    }
+                }
             }
         }
     }
@@ -77,7 +96,7 @@ class MainActivity : AppCompatActivity(){
 
     fun onLoginButtonNavHeaderClick(view: View){
 
-        if(!AuthService.isLoggedIn){
+        if(!App.sharedPreferences.isLoggedIn){
             val loginIntent = Intent(this, LogInActivity::class.java)
             startActivity(loginIntent)
         }else{
@@ -92,7 +111,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     fun onAddChannelButtonNavHeaderClick(view: View){
-        if(!AuthService.isLoggedIn){
+        if(!App.sharedPreferences.isLoggedIn){
             Toast.makeText(this, "You must login to add a channel.", Toast.LENGTH_SHORT).show()
             return
         }
@@ -121,15 +140,14 @@ class MainActivity : AppCompatActivity(){
 
             val newChannel = Channel(channelName, channelDescription, channelId)
             MessageService.channels.add(newChannel)
-
-            println("Name: $channelName \nDescription: $channelDescription \nID: $channelId")
+            channelAdapter.notifyDataSetChanged()
         }
     }
 
     fun onSendMessageButtonClick(view: View){
         hideKeyboard()
 
-        if(!AuthService.isLoggedIn){
+        if(!App.sharedPreferences.isLoggedIn){
             Toast.makeText(this, "Please login to send message.", Toast.LENGTH_SHORT).show()
             return
         }

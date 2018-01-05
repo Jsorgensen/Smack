@@ -1,6 +1,7 @@
 package jsorgensen.com.smack.Services
 
 import android.graphics.Color
+import jsorgensen.com.smack.Controller.App
 import jsorgensen.com.smack.R.id.userImageNavHeader
 
 /**
@@ -19,9 +20,9 @@ object UserDataService {
         avatarName = ""
         email = ""
         name = ""
-        AuthService.authToken = ""
-        AuthService.userEmail = ""
-        AuthService.isLoggedIn = false
+        App.sharedPreferences.authToken = ""
+        App.sharedPreferences.userEmail = ""
+        App.sharedPreferences.isLoggedIn = false
     }
 
     fun returnAvatarColor(components: String): Int{

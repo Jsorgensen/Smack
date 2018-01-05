@@ -27,7 +27,7 @@ object AuthService  {
 //    var userEmail = ""
 //    var authToken = ""
 
-    fun registerUser(context: Context, email: String, password: String, complete: (Boolean) -> Unit){
+    fun registerUser(email: String, password: String, complete: (Boolean) -> Unit){
         val jsonBody = JSONObject()
         jsonBody.put("email", email)
         jsonBody.put("password", password)
@@ -51,7 +51,7 @@ object AuthService  {
         App.sharedPreferences.requestQueue.add(registerRequest)
     }
 
-    fun loginUser(context: Context, email: String, password: String, complete: (Boolean) -> Unit){
+    fun loginUser(email: String, password: String, complete: (Boolean) -> Unit){
 
         val jsonBody = JSONObject()
         jsonBody.put("email", email)
@@ -85,7 +85,7 @@ object AuthService  {
         App.sharedPreferences.requestQueue.add(loginRequest)
     }
 
-    fun createUser(context: Context, name: String, email: String, avatarName: String, avatarColor: String, complete: (Boolean) -> Unit){
+    fun createUser(name: String, email: String, avatarName: String, avatarColor: String, complete: (Boolean) -> Unit){
         val jsonBody = JSONObject()
         jsonBody.put("name", name)
         jsonBody.put("email", email)

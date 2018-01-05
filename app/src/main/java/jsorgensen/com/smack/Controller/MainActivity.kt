@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(){
 
     val socket = IO.socket(SOCKET_URL)
     lateinit var channelAdapter: ArrayAdapter<Channel>
+    var selectedChannel: Channel? = null
 
     private fun setUpAdapters(){
         channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
@@ -50,6 +52,12 @@ class MainActivity : AppCompatActivity(){
         toggle.syncState()
 
         setUpAdapters()
+
+        channelListView.setOnItemClickListener{_, _, i, _ ->
+            selectedChannel = MessageService.channels[i]
+            drawer_layout.closeDrawer(GravityCompat.START)
+            updateWithChannel()
+        }
 
         if(App.sharedPreferences.isLoggedIn){
             AuthService.findUserByEmail(this){}
@@ -77,13 +85,21 @@ class MainActivity : AppCompatActivity(){
                 userImageNavHeader.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
                 userLoginButtonNavHeader.text = "Logout"
 
-                MessageService.getChannels(context){complete ->
+                MessageService.getChannels{complete ->
                     if(complete){
-                        channelAdapter.notifyDataSetChanged()
+                        if(MessageService.channels.count() > 0){
+                            selectedChannel = MessageService.channels[0]
+                            channelAdapter.notifyDataSetChanged()
+                            updateWithChannel()
+                        }
                     }
                 }
             }
         }
+    }
+
+    fun updateWithChannel(){
+        mainChannelName.text = "${selectedChannel?.name}"
     }
 
     override fun onBackPressed() {
@@ -120,14 +136,14 @@ class MainActivity : AppCompatActivity(){
         val dialogView = layoutInflater.inflate(R.layout.add_channel_dialog, null)
 
         builder.setView(dialogView)
-                .setPositiveButton("ADD"){ dialogInterface, i ->
+                .setPositiveButton("ADD"){ _, _ ->
                     val nameEditText = dialogView.findViewById<EditText>(R.id.addChannelNameEditText)
                     val descriptionEditText = dialogView.findViewById<EditText>(R.id.addChannelDescriptionEditText)
                     val channelName = nameEditText.text.toString()
                     val channelDescription = descriptionEditText.text.toString()
 
                     socket.emit("newChannel", channelName, channelDescription)
-                }.setNegativeButton("CANCEL") { dialogInterface, i ->
+                }.setNegativeButton("CANCEL") { _, _ ->
 
                 }.show()
     }

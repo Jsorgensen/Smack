@@ -45,18 +45,8 @@ class MainActivity : AppCompatActivity(){
                 userImageNavHeader.setImageResource(resourceId)
                 userImageNavHeader.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
                 userLoginButtonNavHeader.text = "Logout"
-
-                Log.d("USER_DATA_SERVICE", "name: ${UserDataService.name} \nEmail: ${UserDataService.email} \nImage: ${UserDataService.avatarName}")
-                Log.d("UI_ELEMENTS", "name: ${userNameNavHeader.text.toString()} \nEmail: ${userEmailNavHeader.text.toString()}")
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        Log.d("RESUME_USER_DATA_SERVIC", "name: ${UserDataService.name} \nEmail: ${UserDataService.email} \nImage: ${UserDataService.avatarName}")
-        Log.d("RESUME_UI_ELEMENTS", "name: ${userNameNavHeader.text.toString()} \nEmail: ${userEmailNavHeader.text.toString()}")
     }
 
     override fun onBackPressed() {
@@ -74,7 +64,7 @@ class MainActivity : AppCompatActivity(){
             startActivity(loginIntent)
         }else{
             UserDataService.logout()
-            userNameNavHeader.text = "Login"
+            userNameNavHeader.text = ""
             userEmailNavHeader.text = ""
             userImageNavHeader.setImageResource(R.drawable.profiledefault)
             userImageNavHeader.setBackgroundColor(Color.TRANSPARENT)

@@ -83,23 +83,21 @@ class CreateUserActivity : AppCompatActivity() {
                                 finish()
                             }else{
                                 errorToast("Failed to Create User")
-                                enableSpinner(false)
                             }
                         }
                     }else{
                         errorToast("Failed to Login")
-                        enableSpinner(false)
                     }
                 }
             }else{
                 errorToast("Failed to Register")
-                enableSpinner(false)
             }
         }
     }
 
     fun errorToast(message: String){
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        enableSpinner(false)
     }
 
     fun enableSpinner(enable: Boolean){

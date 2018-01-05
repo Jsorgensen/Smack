@@ -15,8 +15,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import io.socket.client.IO
+import io.socket.emitter.Emitter
+import jsorgensen.com.smack.Model.Channel
 import jsorgensen.com.smack.R
 import jsorgensen.com.smack.Services.AuthService
+import jsorgensen.com.smack.Services.MessageService
 import jsorgensen.com.smack.Services.UserDataService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -31,6 +34,8 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        socket.connect()
+        socket.on("channelCreated", onNewChannel)
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -40,17 +45,12 @@ class MainActivity : AppCompatActivity(){
 
     override fun onResume() {
         LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReceiver, IntentFilter(BROADCAST_USER_DATA_CHANGE))
-        socket.connect()
         super.onResume()
-    }
-
-    override fun onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(userDataChangeReceiver)
-        super.onPause()
     }
 
     override fun onDestroy() {
         socket.disconnect()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(userDataChangeReceiver)
         super.onDestroy()
     }
 
@@ -111,6 +111,19 @@ class MainActivity : AppCompatActivity(){
                 }.setNegativeButton("CANCEL") { dialogInterface, i ->
 
                 }.show()
+    }
+
+    private val onNewChannel = Emitter.Listener {args ->
+        runOnUiThread{
+            val channelName = args[0] as String
+            val channelDescription = args[1] as String
+            val channelId = args[2] as String
+
+            val newChannel = Channel(channelName, channelDescription, channelId)
+            MessageService.channels.add(newChannel)
+
+            println("Name: $channelName \nDescription: $channelDescription \nID: $channelId")
+        }
     }
 
     fun onSendMessageButtonClick(view: View){

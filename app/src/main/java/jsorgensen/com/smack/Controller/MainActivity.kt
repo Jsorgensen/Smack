@@ -11,10 +11,8 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
@@ -64,6 +62,8 @@ class MainActivity : AppCompatActivity(){
 
         setUpAdapters()
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReceiver, IntentFilter(BROADCAST_USER_DATA_CHANGE))
+
         channelListView.setOnItemClickListener{_, _, i, _ ->
             selectedChannel = MessageService.channels[i]
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -73,11 +73,6 @@ class MainActivity : AppCompatActivity(){
         if(App.sharedPreferences.isLoggedIn){
             AuthService.findUserByEmail(this){}
         }
-    }
-
-    override fun onResume() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReceiver, IntentFilter(BROADCAST_USER_DATA_CHANGE))
-        super.onResume()
     }
 
     override fun onDestroy() {
@@ -147,7 +142,7 @@ class MainActivity : AppCompatActivity(){
             userImageNavHeader.setImageResource(R.drawable.profiledefault)
             userImageNavHeader.setBackgroundColor(Color.TRANSPARENT)
             userLoginButtonNavHeader.text = "Login"
-            mainChannelName.text = "Login"
+            mainChannelName.text = "Please log in"
         }
 
     }

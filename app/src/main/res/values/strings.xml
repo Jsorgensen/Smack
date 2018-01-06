@@ -13,4 +13,5 @@
     <string name="avatar_icon_for_user">Avatar icon for user</string>
     <string name="email">Email</string>
     <string name="user_name">User Name</string>
+    <string name="user_icon">User Icon</string>
 </resources>

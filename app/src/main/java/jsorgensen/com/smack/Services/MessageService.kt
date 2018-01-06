@@ -64,7 +64,6 @@ object MessageService {
                     val message = response.getJSONObject(x)
 
                     val messageBody = message.getString("messageBody")
-                    val userId = message.getString("userId")
                     val channelId = message.getString("channelId")
                     val userName = message.getString("userName")
                     val userAvatar = message.getString("userAvatar")
@@ -74,8 +73,8 @@ object MessageService {
 
                     val newMessage = Message(messageBody, userName, channelId, userAvatar, userAvatarColor, id, timeStamp)
                     this.messages.add(newMessage)
-                    complete(true)
                 }
+                complete(true)
             }catch(e: JSONException){
                 Log.d("JSON", "EXC ${e.localizedMessage}")
                 complete(false)

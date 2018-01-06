@@ -10,6 +10,8 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
@@ -18,6 +20,7 @@ import android.widget.EditText
 import android.widget.Toast
 import io.socket.client.IO
 import io.socket.emitter.Emitter
+import jsorgensen.com.smack.Adapters.MessageAdapter
 import jsorgensen.com.smack.Model.Channel
 import jsorgensen.com.smack.Model.Message
 import jsorgensen.com.smack.R
@@ -34,12 +37,16 @@ class MainActivity : AppCompatActivity(){
     val socket = IO.socket(SOCKET_URL)
     lateinit var channelAdapter: ArrayAdapter<Channel>
     var selectedChannel: Channel? = null
-    lateinit var messageAdapter: ArrayAdapter<Message>
+    lateinit var messageAdapter: MessageAdapter
 
     private fun setUpAdapters(){
         channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
         channelListView.adapter = channelAdapter
-        messageAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.messages)
+
+        messageAdapter = MessageAdapter(this, MessageService.messages)
+        messageListView.adapter = messageAdapter
+        val layoutManager = LinearLayoutManager(this)
+        messageListView.layoutManager = layoutManager
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,7 +117,10 @@ class MainActivity : AppCompatActivity(){
 
         MessageService.getMessages(selectedChannel!!.id){complete ->
             if(complete){
-
+                messageAdapter.notifyDataSetChanged()
+                if(messageAdapter.itemCount > 0){
+                    messageListView.smoothScrollToPosition(messageAdapter.itemCount-1)
+                }
             }
         }
     }
@@ -130,11 +140,14 @@ class MainActivity : AppCompatActivity(){
             startActivity(loginIntent)
         }else{
             UserDataService.logout()
+            channelAdapter.notifyDataSetChanged()
+            messageAdapter.notifyDataSetChanged()
             userNameNavHeader.text = ""
             userEmailNavHeader.text = ""
             userImageNavHeader.setImageResource(R.drawable.profiledefault)
             userImageNavHeader.setBackgroundColor(Color.TRANSPARENT)
             userLoginButtonNavHeader.text = "Login"
+            mainChannelName.text = "Login"
         }
 
     }
@@ -189,6 +202,9 @@ class MainActivity : AppCompatActivity(){
 
                     val newMessage = Message(messageBody, userName, channelId, userAvatar, userAvatarColor, id, timeStamp)
                     MessageService.messages.add(newMessage)
+
+                    messageAdapter.notifyDataSetChanged()
+                    messageListView.smoothScrollToPosition(messageAdapter.itemCount-1)
                 }
             }
         }

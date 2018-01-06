@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/messageUserAvatarImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/dark11"
+        android:contentDescription="@string/user_icon" />
+
+    <TextView
+        android:id="@+id/messageUserNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/messageUserAvatarImageView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="UserName" />
+
+    <TextView
+        android:id="@+id/messageBodyTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/messageUserAvatarImageView"
+        app:layout_constraintTop_toBottomOf="@+id/messageUserNameTextView"
+        tools:text="Lorem Ipsum mammas little baby loves shortnin shortnin, mammas little baby loves shortnin bread.  Mammas little baby loves shortnin shortnin, Mammas little baby loves shortnin bread.  Two little chillin, lyen in bed.  One of um sick and the other most dead.  Mamma called the doctor and the doctor said, feed them chillin on shortnin bread.  mammas little baby loves shortnin shortnin, mammas little baby loves shortnin bread." />
+
+    <TextView
+        android:id="@+id/messageTimeStampTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/messageUserNameTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="TimeStamp" />
+</android.support.constraint.ConstraintLayout>

@@ -23,6 +23,8 @@ object UserDataService {
         App.sharedPreferences.authToken = ""
         App.sharedPreferences.userEmail = ""
         App.sharedPreferences.isLoggedIn = false
+        MessageService.clearChannels()
+        MessageService.clearMessages()
     }
 
     fun returnAvatarColor(components: String): Int{
